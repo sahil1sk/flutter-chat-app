@@ -5,22 +5,30 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (ctx, index) => Container(
-          padding: EdgeInsets.all(8),
-          child: Text('This workds'),
-        ),
-      ),
+      body: StreamBuilder( // StreamBuilder is flutter feature which helps to stream the real time data
+        stream: FirebaseFirestore.instance // so in stream we provide real time data if there is any change in data then builder method will revalute again
+              .collection('/chats/UgBA2FSnEAts1W2pkccO/messages')
+              .snapshots(), 
+        builder: (ctx, streamSnapshot) { // streamSnapshot is the object get access to recieve data
+          if(streamSnapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          final documents = streamSnapshot.data.documents; 
+          return ListView.builder(
+            itemCount: documents.length,
+            itemBuilder: (ctx, index) => Container(
+              padding: EdgeInsets.all(8),
+              child: Text(documents[index]['text']),
+            ),
+          );
+        },
+      ), 
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          FirebaseFirestore.instance
-              .collection('/chats/UgBA2FSnEAts1W2pkccO/messages')
-              .snapshots() // this will listen changes carefully if any happen inside collections
-              .listen((data) {
-            print('Here is the data ${data.docs[0]['text']}');
-          });
+            
         },
       ),
     );
