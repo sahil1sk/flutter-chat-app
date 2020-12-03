@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../chat/message_bubble.dart';
+
+
 class Messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -15,7 +18,7 @@ class Messages extends StatelessWidget {
         final chatDocs = chatSnapshot.data.documents;
         return ListView.builder(
           reverse: true, // it will scroll from bottom to the top
-          itemBuilder: (ctx, index) => Text(
+          itemBuilder: (ctx, index) => MessageBubble(
             chatDocs[index]['text']
           ),
           itemCount: chatDocs.length,
