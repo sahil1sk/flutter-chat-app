@@ -21,6 +21,7 @@ class _NewMessageState extends State<NewMessage> {
       'createdAt': Timestamp.now(), // this is available by the firebase
       'userId': user.uid, // setting the user id
       'username': userData['username'],
+      'userImage': userData['image_url'], // setting user image url
     });
     _controller.clear(); // helps to clear the input
   }
