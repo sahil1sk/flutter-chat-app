@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart'; // for using PlatformException handle
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../widgets/auth/auth_form.dart';
 
@@ -19,8 +22,8 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _submitAuthForm(
     String email, String password, 
-    String username, bool isLogin,
-    BuildContext ctx,
+    String username, File image, 
+    bool isLogin, BuildContext ctx,
   ) async {
     var authResult;
 
@@ -38,6 +41,14 @@ class _AuthScreenState extends State<AuthScreen> {
           email: email, 
           password: password
         );
+
+        final ref = FirebaseStorage.instance
+        .ref()
+        .child('user_image') // adding user_image folder at firebase storage
+        .child(authResult.user.uid + '.jpg'); // in folder we adding the image with unique name
+
+        await ref.putFile(image); // so here we putting the file with name wich we define means unique name
+
         // so when the new user signUp by using its id we set extra data on its document
         await FirebaseFirestore
         .instance.collection('users') // getting user collection
