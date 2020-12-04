@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../pickers/user_image_picker.dart';
@@ -22,10 +24,23 @@ class _AuthFormState extends State<AuthForm> {
   var _userEmail = '';
   var _userName = '';
   var _userPassword = '';
+  File _userImageFile;
+
+  void _pickedImage(File image) {
+    _userImageFile = image;
+  }
 
   void _trySubmit () {
     final isValid = _formKey.currentState.validate(); // this will trigger all the validators
     FocusScope.of(context).unfocus(); // always helps to remove the keyboard because we take away focus from all the fields
+
+    if(_userImageFile == null && !_isLogin) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Please pick an image'),
+        backgroundColor: Theme.of(context).errorColor,
+      ));
+      return;
+    }
 
     if (isValid) {
       _formKey.currentState.save();
@@ -52,7 +67,7 @@ class _AuthFormState extends State<AuthForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min, // means take space only as much needed
                 children: <Widget>[
-                  if(!_isLogin) UserImagePicker(),
+                  if(!_isLogin) UserImagePicker(_pickedImage),
                   TextFormField(
                     key: ValueKey('email'), // we using key for unique identify by flutter when we switch to login and signup mode
                     validator: (value) {
