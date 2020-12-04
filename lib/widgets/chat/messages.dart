@@ -27,6 +27,7 @@ class Messages extends StatelessWidget {
           reverse: true, // it will scroll from bottom to the top
           itemBuilder: (ctx, index) => MessageBubble(
             chatDocs[index]['text'],
+            chatDocs[index]['username'],
             chatDocs[index]['userId'] == authData.data.uid,
             key: ValueKey(chatDocs[index].documentId),
           ),

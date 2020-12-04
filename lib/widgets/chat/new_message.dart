@@ -14,11 +14,13 @@ class _NewMessageState extends State<NewMessage> {
   void _sendMessage() async {
     FocusScope.of(context).unfocus(); // removing the keyboard
     final user = await FirebaseAuth.instance.currentUser; // getting the user 
+    final userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
     // sending the message
     FirebaseFirestore.instance.collection('chat').add({
       'text': _enteredMessage,
       'createdAt': Timestamp.now(), // this is available by the firebase
       'userId': user.uid, // setting the user id
+      'username': userData['username'],
     });
     _controller.clear(); // helps to clear the input
   }
