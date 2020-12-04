@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../pickers/user_image_picker.dart';
+
 class AuthForm extends StatefulWidget {
   final bool isLoading;
   final void Function(
@@ -50,6 +52,7 @@ class _AuthFormState extends State<AuthForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min, // means take space only as much needed
                 children: <Widget>[
+                  if(!_isLogin) UserImagePicker(),
                   TextFormField(
                     key: ValueKey('email'), // we using key for unique identify by flutter when we switch to login and signup mode
                     validator: (value) {
