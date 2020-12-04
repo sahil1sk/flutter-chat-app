@@ -49,6 +49,8 @@ class _AuthScreenState extends State<AuthScreen> {
 
         await ref.putFile(image); // so here we putting the file with name wich we define means unique name
 
+        final url = await ref.getDownloadURL();
+
         // so when the new user signUp by using its id we set extra data on its document
         await FirebaseFirestore
         .instance.collection('users') // getting user collection
@@ -56,6 +58,7 @@ class _AuthScreenState extends State<AuthScreen> {
         .set({  // setting the data
           'username': username,
           'email': email,
+          'image_url': url,
         });
       }
 
