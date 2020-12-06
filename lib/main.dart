@@ -1,3 +1,4 @@
+import 'package:chat_app/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(), // adding stream builder and listen whenever auth state changes
         builder: (ctx, userSnapshot) {
+          if(userSnapshot.connectionState == ConnectionState.waiting) {
+            return SplashScreen();
+          }
           // userSnapshot.hasData means if having specific token then return chat screen
           if(userSnapshot.hasData) return ChatScreen();
           return AuthScreen();

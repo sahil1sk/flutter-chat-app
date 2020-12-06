@@ -1,11 +1,38 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/chat/new_message.dart';
 import '../widgets/chat/messages.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    // this is we specially add for the ios pudh notification system
+    // this code ask for the permissions
+    final fbm = FirebaseMessaging();
+    fbm.configure(onMessage: (msg) { // handle message while app is running
+      print(msg);
+      return; 
+    }, onLaunch: (msg) { // handle message when the app is open
+      print(msg);
+      return;
+    }, onResume: (msg){ // handle message  when app is not terminated but inside the RAM
+      print(msg);
+      return;
+    });
+
+    // to get the FCM token 
+    //fbm.getToken();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,6 +40,7 @@ class ChatScreen extends StatelessWidget {
         title: Text('FlutterChat'),
         actions: <Widget>[
           DropdownButton( // adding drop down button
+            underline: Container(), // by default there is underline so we remove this by set container
             icon: Icon(
               Icons.more_vert,
               color: Theme.of(context).primaryIconTheme.color,
